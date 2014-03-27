@@ -1,0 +1,142 @@
+[buildout]
+parts = 
+    project-directories
+    pydev
+    python
+    fabric
+    django
+    pylint
+    django-tests
+    gunicorn
+    gunicornctl
+
+develop = .
+eggs = ${project:project-name}
+
+versions = versions
+bin-directory = bin
+develop-eggs-directory = lib/buildout/develop-eggs
+eggs-directory = lib/buildout/eggs
+#
+# Setup the following in ~/.buildout/default.cfg
+# for faster downloads and better buildout performance
+#
+# download-cache = <HOME-DIR>/.buildout/dlcache
+# eggs-directory = <HOME-DIR>/.buildout/eggs
+#
+installed = lib/buildout/.installed.cfg
+parts-directory = lib/buildout/parts
+
+[project]
+project-name = tweet-parser
+project-version = 0.0.1
+project-url = 
+project-license =
+author = 
+
+[start-django-project]
+recipe = plone.recipe.command
+command = bin/python etc/bin/django-admin.py startproject ${project:project-name} src/; cp etc/templates/test_settings.py src/${project:project-name}/; cp etc/templates/dev_settings.py src/${project:project-name}/; rm src/manage.py
+
+[versions]
+Django = 1.5.5
+Fabric = 1.8.0
+boto   = 2.24.0
+
+[python]
+recipe = zc.recipe.egg
+interpreter = python
+eggs = ${buildout:eggs}
+
+[project-directories]
+recipe = z3c.recipe.mkdir
+paths =
+    ${buildout:directory}/.buildout-cache
+    ${buildout:directory}/etc
+    ${buildout:directory}/lib
+    ${buildout:directory}/src
+    ${buildout:directory}/docs
+    ${buildout:directory}/out
+    ${buildout:directory}/tests
+    ${buildout:directory}/config
+
+[pydev]
+recipe = pb.recipes.pydev
+eggs = ${django-tests:eggs}
+
+[fabric]
+recipe = zc.recipe.egg
+unzip = true
+eggs = Fabric
+       boto
+	   ${buildout:eggs}
+	   ${pylint:eggs}
+
+[django]
+recipe = djangorecipe
+projectegg = ${project:project-name}
+settings = dev_settings
+eggs = ${buildout:eggs}
+
+
+[django-tests]
+recipe = djangorecipe
+projectegg = ${project:project-name}
+settings = test_settings
+extra-paths = tests
+eggs = django_nose
+       nose-progressive
+       coverage
+       mock
+       ${buildout:eggs}
+control-script = test
+
+[node-js]
+recipe = gp.recipe.node
+npms = less jshint csslint
+
+[pylint]
+recipe = zc.recipe.egg
+unzip = true
+eggs = pylint
+	   ${buildout:eggs}
+
+
+[omelette]
+recipe = collective.recipe.omelette
+eggs = ${buildout:eggs}
+
+[gunicorn]
+recipe = zc.recipe.egg:scripts
+dependent-scripts = true
+eggs = 
+    ${buildout:eggs}
+    eventlet
+    gunicorn
+    
+[gunicornctl]
+recipe = collective.recipe.template
+mode = 755
+input    = ${buildout:directory}/etc/templates/gunicornctl.sh.in
+output   = ${buildout:directory}/bin/gunicornctl.sh
+project-name = ${project:project-name}
+project-dir = ${buildout:directory}
+project-pid = /tmp/${project:project-name}.pid
+project-log = /tmp/${project:project-name}.log
+project-settings = ${project:project-name}.dev_settings
+workers = 4
+bind-address = 127.0.0.1:8000 
+
+[elasticbeanstalk-first]
+extends = project
+recipe = z3c.recipe.filetemplate
+source-directory = etc/templates/elasticbeanstalk
+
+[elasticbeanstalk-second]
+recipe = plone.recipe.command
+command = mkdir .ebextensions; mv custom_log.config .ebextensions/; mv elasticbeanstalk.config .ebextensions/${project:project-name}.config; mv manage.py src/; rm src/${project:project-name}/wsgi.py; mv wsgi.py src/${project:project-name}/;
+
+[elasticbeanstalk-config]
+recipe = plone.recipe.command
+command = bin/buildout install elasticbeanstalk-first; bin/buildout install elasticbeanstalk-second;
+

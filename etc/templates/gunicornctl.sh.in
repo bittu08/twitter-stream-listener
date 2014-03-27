@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Specify path variable
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+# Kill me on all errors
+set -e
+
+case "$1" in
+  start)
+    ${project-dir}/bin/gunicorn_django -D \
+        -w ${workers} \
+        -p ${project-pid} \
+        --log-file=/${project-log} \
+        -b ${bind-address} \
+        ${project-settings}
+    ;;
+  stop)
+    kill `cat ${project-pid}`
+    ;;    
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
