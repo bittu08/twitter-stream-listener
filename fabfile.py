@@ -2,7 +2,7 @@ from fabric.api import task, run, local
 import os
 
 COVERAGE_ENABLED = False
-PROJECT_PACKGE = '${project-name}'
+PROJECT_PACKGE = 'gladminds'
 
 def _ensure_dir(path):
     if not os.path.exists(path):
@@ -74,4 +74,4 @@ def test(package=''):
         options.append('--cover-package=%s' % PROJECT_PACKGE)
         options.append('--cover-min-percentage=80')
 
-    local('bin/test test {0} {0}'.format(package, ' '.join(options)))
+    local('bin/test test {0} {1}'.format(package, ' '.join(options)))

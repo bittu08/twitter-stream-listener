@@ -1,5 +1,5 @@
 """
-WSGI config for djprotemplate project.
+WSGI config for tweetlistener project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -14,17 +14,12 @@ framework.
 
 """
 import os
-import sys
-
-PROJECT_DIR = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
-sys.path.append(PROJECT_DIR)
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
-# os.environ["DJANGO_SETTINGS_MODULE"] = "project_name.settings"
-#Change the app_name.settings to your app_name, for example lithium.settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "${project-name}.settings")
+# os.environ["DJANGO_SETTINGS_MODULE"] = "tweetlistener.settings"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tweetlistener.settings")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

@@ -9,17 +9,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "src/templates")
 OUT_DIR = os.path.join(BASE_DIR, "out")
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'gladminds',
-        'USER': 'gladminds',
-        'PASSWORD': 'gladmindsRocks',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
-}
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -36,6 +25,3 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     TEMPLATE_DIR,
 )
-
-#Celery Configuration
-BROKER_URL= 'redis://localhost:6379/0'
