@@ -24,6 +24,20 @@ After installation start both services:
     sudo service redis-server start
     sudo service nginx start
 ```
+
+### Configuration
+Following configuration are needed to get stream from twitter. Register your application in twitter developer site. This will provide ```consumer_key``` ```consumer_secret``` ```access_token``` and ```access_token_secret```. Add these detail in dev_settings.py
+
+```sh
+    TWITTER_CONFIG = {
+	    "consumer_key":{consumer_key},
+	    "consumer_secret":{consumer_secret},
+	    "access_token":{access_token},
+	    "access_token_secret":{access_token_secret},
+    }
+```
+
+
 ### Deployment
 To start and stop the server, run ```runscript.sh```
 ```sh
@@ -36,3 +50,5 @@ To start and stop the server, run ```runscript.sh```
 4. /v1/tweets/search?q={free text} - It's return the list of tweets which matches with free text
 5. /v1/tweets/search?user_name={user_name} - It's return the list of tweets from specific user_name.
 
+### Note
+On adding or updating the keyword, it's in sync after 1-hours to change this durantion we need the modify the ASYNC_TIME in dev_settings.py
