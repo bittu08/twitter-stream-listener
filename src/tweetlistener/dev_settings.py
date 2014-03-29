@@ -37,3 +37,5 @@ TWITTER_CONFIG = {
 	"index":"twitter",
 	"doc_type":"tweet",
 }
+
+TWEET_ASYNC_TIME = 20
