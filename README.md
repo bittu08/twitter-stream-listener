@@ -16,7 +16,7 @@ The above steps would be needed one time for setting up a new project and genera
 Following package are required to install
 1. Elasticsearch
 2. Redis
-3. Nginx
+3. Nginx - Nginx configuration required
 
 After installation start both services:
 ```sh
