@@ -27,7 +27,12 @@ After installation start both services:
 ### Deployment
 To start and stop the server, run ```runscript.sh```
 ```sh
-    runscript.sh
+    sh runscript.sh
 ```
 ### APIs Documentation
+1. /v1/keywords - This APIs support GET, POST, PUT and DELETE method. It's store list of keyword data.
+2. /v1/keywords/{id} - Return the keyword detail for specific id
+3. /v1/tweets - Return the list of tweets from elasticsearch
+4. /v1/tweets/search?q={free text} - It's return the list of tweets which matches with free text
+5. /v1/tweets/search?user_name={user_name} - It's return the list of tweets from specific user_name.
 
