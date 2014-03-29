@@ -114,7 +114,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'tweetlistener.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
@@ -135,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tweetlistener',
+    'djcelery'
     
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

@@ -13,6 +13,16 @@ class ElasticSearchManager(object):
 	def search(self, search_text = None, *args, **kwargs):
 		pass
 
+	def get(self, *args, **kwargs):
+		self.obj_es.get(index=self.index, doc_type=self.doc_type, id=kwargs['id'])
+
+	def get_list(self, *args, **kwargs):
+		obj = self.obj_es.search(index=self.index, body={"query": {"match_all": {}}})
+		for data in obj['hits']['hits']:
+			data['pk'] = int(data['_id'])
+		return obj['hits']['hits']
+
+
 	def insert(self, data = None):
 		data = json.loads(data)
 		data['user_name'] = data['user']['screen_name']
