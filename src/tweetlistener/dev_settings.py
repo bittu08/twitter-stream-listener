@@ -38,4 +38,4 @@ TWITTER_CONFIG = {
 	"doc_type":"tweet",
 }
 
-TWEET_ASYNC_TIME = 20
+TWEET_ASYNC_TIME = 3600
