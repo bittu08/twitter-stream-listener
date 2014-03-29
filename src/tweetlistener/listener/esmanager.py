@@ -1,6 +1,8 @@
 from elasticsearch import Elasticsearch
 import json
+import logging
 
+logger = logging.getLogger(__name__)
 class ElasticSearchManager(object):
 
 	def __init__(self, index=None, doc_type=None, *args, **kwargs):
@@ -17,7 +19,7 @@ class ElasticSearchManager(object):
 		del data['user']
 		del data['entities']
 		res = self.obj_es.index(index=self.index, doc_type=self.doc_type, id=data['id'], body=data)
-		print res
+		logger.info("Getting stream:{0}".format(res))
 
 	def delete(self, data = None):
 		pass
