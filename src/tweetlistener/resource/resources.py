@@ -1,9 +1,13 @@
 from tweetlistener.models import common
 from tastypie.resources import Resource, ModelResource
 from tastypie.authorization import Authorization
+from tastypie.bundle import Bundle
+from tastypie.utils.mime import determine_format, build_content_type
 from django.conf.urls import url
+from django.http import HttpResponse
+import json
 
-class TwitterBaseResource(ModelResource):
+class TwitterBaseResource(Resource):
 	def __init__(self, data_source = None, *args, **kwargs):
 		super(TwitterBaseResource, self).__init__(*args, **kwargs)
 		self.dao = data_source
@@ -11,12 +15,11 @@ class TwitterBaseResource(ModelResource):
 	def determine_format(self, request):
 		return 'application/json'
 
-class KeywordResources(TwitterBaseResource):
+class KeywordResources(ModelResource):
     class Meta:
         queryset = common.KeywordData.objects.all()
         resource_name = 'keywords'
         authorization= Authorization()	
-
 
 class TwitterResource(TwitterBaseResource):
 	class Meta:
@@ -25,13 +28,20 @@ class TwitterResource(TwitterBaseResource):
 
 	def obj_get_list(self, bundle, **kwargs):
 		data = self.dao.get_list()
-		for obj in data:
-			print obj['pk']
+		bundle.data = data
 		return data
 
 	def obj_get(self, bundle, **kwargs):
-		id = kwargs.get('id', None)
-		return self.dao.get(id=id)
+		pk_id = kwargs.get('pk', None)
+		return self.dao.get(id=pk_id)
+
+	def create_response(self, request, data, response_class=HttpResponse, **response_kwargs):
+		desired_format = self.determine_format(request)
+		if isinstance(data, Bundle):
+			serialized = data.obj
+		elif isinstance(data, dict):
+			serialized = [raw.obj for raw in data['objects']]
+		return HttpResponse(content=json.dumps(serialized), content_type=build_content_type(desired_format))
 
 class TwitterSearchResource(TwitterBaseResource):
     class Meta:
