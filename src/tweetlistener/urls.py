@@ -12,5 +12,5 @@ api_v1.register(r.TwitterSearchResource(data_source = esm.ElasticSearchManager(*
 urlpatterns = patterns('tweetlistener',
 	(r'', include(api_v1.urls)),
     # Uncomment the next line to enable the admin:
-    url(r'^home/','views.home', name='home'),
+    url(r'^','views.home', name='home'),
 )
