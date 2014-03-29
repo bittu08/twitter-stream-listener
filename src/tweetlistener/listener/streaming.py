@@ -1,35 +1,43 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from esmanager import ElasticSearchHandler
-# Go to http://dev.twitter.com and create an app.
-# The consumer key and secret will be generated for you after
-consumer_key="IN6zHMLbiYeWTRAG41IzEw"
-consumer_secret="gtT8Wdz3wW5fhkL1VNHi8IXiVOj4Z6JUyxIk6jyMTU"
-
-# After the step above, you will be redirected to your app's page.
-# Create an access token under the the "Your access token" section
-access_token="2416222890-QpC6kPa1fsbiADLxP0sPCf4wVF9zEa9wy5OTCbt"
-access_token_secret="bDWTVW5FB0DvSdsQA22ryfFXQdAdGyap2utBDQyqN1XJ2"
+from esmanager import ElasticSearchManager
 
 
-
+"""
+A Twitter listener, its capture all the tweet from keyword list
+"""
 class TwitterListener(StreamListener):
+
+    def __init__(self, dao=None, *args, **kwargs):
+        super(TwitterListener, self).__init__(*args, **kwargs)
+        self.dao = dao
+
     """ A listener handles tweets are the received from the stream.
     This is a basic listener that just prints received tweets to stdout.
-
     """
     def on_data(self, data):
-        es  = ElasticSearchHandler()
-        es.insert(data = data)
+        self.dao.insert(data = data)
         return True
 
     def on_error(self, status):
         print status
 
-if __name__ == '__main__':
-    l = TwitterListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    stream = Stream(auth, l)
-    stream.filter(track=['basketball'])
+class TwitterHandler(object):
+
+    def __init__(self, keywords=[], *args, **kwargs):
+        self.keywords = keywords
+        self.consumer_key = kwargs.get('consumer_key', None)
+        self.consumer_secret = kwargs.get('consumer_secret', None)
+        self.access_token = kwargs.get('access_token', None)
+        self.access_token_secret = kwargs.get('access_token_secret',  None)
+        self.index = kwargs.get('index', None)
+        self.doc_type = kwargs.get('doc_type', None)
+
+    def handler(self):
+        esm = ElasticSearchManager(index=self.index , doc_type = self.doc_type)
+        obj_listener = TwitterListener(dao=esm)
+        auth = OAuthHandler(self.consumer_key, self.consumer_secret)
+        auth.set_access_token(self.access_token, self.access_token_secret)
+        stream = Stream(auth, obj_listener)
+        stream.filter(track=self.keywords)

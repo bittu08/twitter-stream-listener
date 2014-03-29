@@ -11,3 +11,4 @@ class KeywordData(models.Model):
 	class Meta:
 		app_label = "tweetlistener"
 		verbose_name_plural = "keyword data"
+
