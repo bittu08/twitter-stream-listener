@@ -56,12 +56,13 @@ class TwitterSearchResource(TwitterBaseResource):
             url(r"^tweets/search", self.wrap_view('dispatch_search'))
         ]
 
-    def dispatch_search(request, **kwargs):
-    	free_text = request.get.GET['q']
-    	user_name = request.get.GET['user_name']
+    def dispatch_search(self, request, **kwargs):
+    	free_text = request.GET.get('q', None)
+    	user_name = request.GET.get('user_name', None)
+        print "free_text", free_text
     	data = self.get_search_result(free_text=free_text, user_name=user_name)
     	to_be_serialized = {"data": data}
         return self.create_response(request, data=to_be_serialized)
 
     def get_search_result(self, free_text=None, user_name=None, *args, **kwargs):
-    	pass
+    	return self.dao.search(search_text = free_text)
