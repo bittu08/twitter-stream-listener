@@ -2,6 +2,7 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 from esmanager import ElasticSearchManager
 from tweetlistener.models import common
+from streaming import TwitterListener
 import time
 
 class TwitterHandler(object):

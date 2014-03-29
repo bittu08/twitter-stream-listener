@@ -8,7 +8,7 @@ export DJANGO_SETTINGS_MODULE=tweetlistener.dev_settings
 #git pull origin master
 
 # Run buildout
-bin/buildout
+#bin/buildout
 
 # Synchromize database
 bin/django syncdb --settings=$DJANGO_SETTINGS_MODULE
@@ -46,3 +46,7 @@ output=`ps aux | grep "bin/django r[u]nserver 0.0.0.0:8000"`
 set -- $output
 pid=$2
 echo "Started gladminds (PID $pid)"
+
+#Start django command
+echo "Starting Django command"
+nohup bin/django task_command --settings=$DJANGO_SETTINGS_MODULE &
