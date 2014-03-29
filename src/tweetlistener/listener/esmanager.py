@@ -1,8 +1,10 @@
 from elasticsearch import Elasticsearch
-import json
+from tweetlistener.utils import import_json
 import logging
 
 logger = logging.getLogger(__name__)
+json = import_json()
+
 class ElasticSearchManager(object):
 
 	def __init__(self, index=None, doc_type=None, *args, **kwargs):

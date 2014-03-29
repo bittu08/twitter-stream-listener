@@ -5,7 +5,11 @@ from tastypie.bundle import Bundle
 from tastypie.utils.mime import determine_format, build_content_type
 from django.conf.urls import url
 from django.http import HttpResponse
-import json
+from tweetlistener.utils import import_json
+import logging
+
+logger = logging.getLogger(__name__)
+json=import_json()
 
 class TwitterBaseResource(Resource):
 	def __init__(self, data_source = None, *args, **kwargs):

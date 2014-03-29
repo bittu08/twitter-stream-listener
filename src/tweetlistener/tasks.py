@@ -15,7 +15,6 @@ def send_tweet_stream_to_elasticsearch(*args, **kwargs):
     try:
         resultset = common.KeywordData.objects.filter(is_active=True)
         keywords = [data.keyword for  data in resultset]
-        print keywords
         obj = TwitterHandler(keywords = keywords, **settings.TWITTER_CONFIG)
         obj.handler()
     except (Exception) as ex:
