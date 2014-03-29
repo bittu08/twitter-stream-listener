@@ -23,7 +23,10 @@ class KeywordResources(ModelResource):
     class Meta:
         queryset = common.KeywordData.objects.all()
         resource_name = 'keywords'
-        authorization= Authorization()	
+        authorization= Authorization()
+
+    def determine_format(self, request):
+		return 'application/json'
 
 class TwitterResource(TwitterBaseResource):
 	class Meta:
@@ -45,6 +48,7 @@ class TwitterResource(TwitterBaseResource):
 			serialized = data.obj
 		elif isinstance(data, dict):
 			serialized = [raw.obj for raw in data['objects']]
+		serialized = {'data':serialized}
 		return HttpResponse(content=json.dumps(serialized), content_type=build_content_type(desired_format))
 
 class TwitterSearchResource(TwitterBaseResource):
@@ -59,10 +63,13 @@ class TwitterSearchResource(TwitterBaseResource):
     def dispatch_search(self, request, **kwargs):
     	free_text = request.GET.get('q', None)
     	user_name = request.GET.get('user_name', None)
-        print "free_text", free_text
     	data = self.get_search_result(free_text=free_text, user_name=user_name)
     	to_be_serialized = {"data": data}
         return self.create_response(request, data=to_be_serialized)
 
     def get_search_result(self, free_text=None, user_name=None, *args, **kwargs):
-    	return self.dao.search(search_text = free_text)
+    	if free_text:
+    		query = {"text":free_text}
+    	elif user_name:
+    		query = {"user_name":user_name}
+    	return self.dao.search(query=query)

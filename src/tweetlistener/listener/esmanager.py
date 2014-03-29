@@ -14,8 +14,8 @@ class ElasticSearchManager(object):
 		self.doc_type = doc_type
 		self.obj_es = Elasticsearch()
 
-	def search(self, search_text = None, *args, **kwargs):
-		data = self.obj_es.search(index=self.index, doc_type=self.doc_type, body={"query":{"match":{"text":search_text}}})
+	def search(self, query = None, *args, **kwargs):
+		data = self.obj_es.search(index=self.index, doc_type=self.doc_type, body={"query":{"match":query}})
 		return fetch_source(data['hits']['hits'])
 
 	def get(self, *args, **kwargs):

@@ -39,13 +39,13 @@ nohup bin/django celery -A tweetlistener beat -S djcelery.schedulers.DatabaseSch
 sleep 5
 
 # Run server
-echo "Starting gladminds ..."
+echo "Starting tweetlistener ..."
 nohup bin/django runserver --settings=$DJANGO_SETTINGS_MODULE &
 sleep 5
 output=`ps aux | grep "bin/django r[u]nserver 0.0.0.0:8000"`
 set -- $output
 pid=$2
-echo "Started gladminds (PID $pid)"
+echo "Started tweetlistener (PID $pid)"
 
 #Start django command
 echo "Starting Django command"
